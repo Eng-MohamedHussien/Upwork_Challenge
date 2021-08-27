@@ -35,6 +35,7 @@ def list_units(request):
     serializer2 = HotelSerializer(cheapest_hotel)
 
     data = {'items': []} 
+    added = False
 
     for val in serializer1.data:
         if val['price'] < cheapest_hotel_price:
@@ -43,7 +44,13 @@ def list_units(request):
             hotel_data= serializer2.data
             hotel_data['price'] = cheapest_hotel_price
             data['items'].append(hotel_data)
+            added = True
             data['items'].append(val)
+
+    if not added:
+        hotel_data= serializer2.data
+        hotel_data['price'] = cheapest_hotel_price
+        data['items'].append(hotel_data)
 
     return Response(data)
 
