@@ -1,6 +1,15 @@
 from django.contrib import admin
 
-from .models import Listing, HotelRoomType, HotelRoom, BookingInfo
+from .models import Listing, HotelRoomType, HotelRoom, BookingInfo, Reservation
+
+
+class ReservationInline(admin.StackedInline):
+    model = Reservation
+       
+@admin.register(Reservation)
+class ReservationAdmin(admin.ModelAdmin):
+    list_display = ('apartment', 'hotel_room', 'from_date', 'to_date')
+    list_filter = ('from_date', 'to_date')
 
 
 class HotelRoomTypeInline(admin.StackedInline):
@@ -18,6 +27,7 @@ class ListingAdmin(admin.ModelAdmin):
         'city',
     )
     list_filter = ('listing_type',)
+    inlines = [ReservationInline]
 
 
 class HotelRoomInline(admin.StackedInline):
@@ -34,6 +44,7 @@ class HotelRoomTypeAdmin(admin.ModelAdmin):
 @admin.register(HotelRoom)
 class HotelRoomAdmin(admin.ModelAdmin):
     list_display = ('room_number',)
+    inlines = [ReservationInline]
 
 
 @admin.register(BookingInfo)
